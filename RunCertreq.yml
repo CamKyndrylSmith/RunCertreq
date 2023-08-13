@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------#
 - name: Create a certificate request
   hosts: all
-  gather_facts: false
+  gather_facts: true
  #vars:
  #  kyndryl_folder: 'C:\Kyndryl\'
  #  upload_file: 'UploadArchive.ps1'
