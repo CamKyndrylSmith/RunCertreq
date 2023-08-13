@@ -1,0 +1,26 @@
+---
+# ----------------------------------------------------------------#
+#   ProjectClean  
+#
+# This playbook will remove all schedule tasks and related  
+# files for the windows eventlog archive project. 
+#         + Copy archived logs to server - Schedule Task
+#         + Maintain archive event logs        
+#         + UploadArchive.ps1 - Powershell script
+#         + RemoveFiles.ps1 - Powershell script
+#         
+# ----------------------------------------------------------------#
+- name: Create a certificate request
+  hosts: all
+  gather_facts: false
+ #vars:
+ #  kyndryl_folder: 'C:\Kyndryl\'
+ #  upload_file: 'UploadArchive.ps1'
+ #  remove_file: 'RemoveFiles.ps1'
+
+  tasks:
+    - name: "Run powershell to create request"
+      win_shell: "{{ lookup('template', './CreateCSR.ps1') }}"
+      register: csr
+      when: inventory_hostname != certificate_authority
+      no_log: True
