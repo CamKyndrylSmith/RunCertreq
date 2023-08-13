@@ -23,4 +23,4 @@
       win_shell: "{{ lookup('template', './CreateCSR.ps1') }}"
       register: csr
       when: inventory_hostname != certificate_authority
-      no_log: True
+   
