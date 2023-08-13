@@ -22,8 +22,7 @@
     - name: "Run powershell to create request"
       win_shell: "{{ lookup('template', './CreateCSR.ps1') }}"
       register: csr
-      when: inventory_hostname != certificate_authority
-
+    
   # Debug write out 
     - name: "Print the returned value"
       debug:
