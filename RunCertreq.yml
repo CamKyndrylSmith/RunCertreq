@@ -20,7 +20,7 @@
 
   tasks:
     - name: "Run powershell to create request"
-      win_shell: "{{ lookup('file', './CreateCSR.ps1') }}"  
+      win_shell: "{{ lookup('file', 'CreateCSR.ps1') }}"  
       register: csr
     
   # Debug write out 
