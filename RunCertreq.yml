@@ -8,7 +8,7 @@
 #         + Maintain archive event logs        
 #         + UploadArchive.ps1 - Powershell script
 #         + RemoveFiles.ps1 - Powershell script
-#         
+#     win_shell: "{{ lookup('template', './CreateCSR.ps1') }}"    
 # ----------------------------------------------------------------#
 - name: Create a certificate request
   hosts: all
@@ -20,7 +20,7 @@
 
   tasks:
     - name: "Run powershell to create request"
-      win_shell: "{{ lookup('template', './CreateCSR.ps1') }}"
+      script: CreateCSR.ps1
       register: csr
     
   # Debug write out 
