@@ -38,6 +38,6 @@
   # Copy file to a remote location 
     - name: Copy request file to common server 
       fetch:
-        src: {{ kyndryl_folder }}
+        src: "{{ kyndryl_folder }}"
         dest: /tmp/requestfile/
         flat: yes    
