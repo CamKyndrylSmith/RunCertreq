@@ -27,7 +27,7 @@
     # Copy file to a remote location 
     - name: Copy powershell script to remote host
       win_copy:
-        src: 'CreateCSR.ps1'
+        src: CreateCSR.ps1
         dest: "{{ kyndryl_folder }}"
       delegate_to: localhost
     
