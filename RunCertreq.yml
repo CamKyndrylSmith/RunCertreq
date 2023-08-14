@@ -31,13 +31,14 @@
         dest: "{{ kyndryl_folder }}CreateCSR.ps1"
       #delegate_to: localhost
     
-  # run the powershell script to create the request file  
+  # Run the powershell script to create the request file  
     - name: "Run powershell to create request"
       win_shell: "{{ kyndryl_folder }}CreateCSR.ps1"  
         
   # Copy file to a remote location 
-    - name: Copy request file to common server 
-      fetch:
+    - name: Copy folder contents recursively
+      win_copy:
         src: "{{ kyndryl_folder }}"
         dest: /tmp/requestfile/
-        flat: yes    
+        remote_src: yes
+   
