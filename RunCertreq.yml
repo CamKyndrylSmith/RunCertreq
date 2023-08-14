@@ -35,4 +35,4 @@
       win_copy:
         src: 'C:\Kyndryl\CSR\'
         dest: '\\172.16.23.23\temp'
-      remote_src: yes
+        remote_src: yes
