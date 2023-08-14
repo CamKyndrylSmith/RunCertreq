@@ -49,7 +49,7 @@ FriendlyName = "Kyndryl CACF"
 _continue_ = "dns=$fqdn&"
 _continue_ = "IPAddress=$IPaddr&"
 "@
-    #write-host $INF
+    # Create the certificate request configuration file INF
     Try{
         $INF | out-file -filepath $INFPath -force
         Write-host "Inf file created: " $INFPath
@@ -57,6 +57,16 @@ _continue_ = "IPAddress=$IPaddr&"
         Exit 3
     } 
     
+    # Check if a certificate request file already exists
+    if (Test-Path -Path $CSRPath){
+        Remove-Item $CSRPath
+        Write-Host "$CSRPath removed successfully."
+    }
+    else{
+        Write-Host "$CSRPath not found."
+    }
+
+    # Run the CERTREQ command to generate a certificate request     
     Try{
         certreq -new $INFPath $CSRPath
         Write-host "CRS file created: " $CSRPath
@@ -64,6 +74,7 @@ _continue_ = "IPAddress=$IPaddr&"
         $Error[0].Exception.GetType().FullName | out-file -filepath $CSRPath -force
         Exit 4
     } 
-          
+    
+    # Remove the INF file
     Remove-Item $INFPath
     exit 0

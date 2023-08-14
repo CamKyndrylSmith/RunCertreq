@@ -19,6 +19,7 @@
  #  remove_file: 'RemoveFiles.ps1'
 
   tasks:
+  # run the powershell script to create the request file  
     - name: "Run powershell to create request"
       win_shell: "{{ lookup('file', './CreateCSR.ps1') }}"  
       register: csr
