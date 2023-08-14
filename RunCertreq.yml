@@ -7,16 +7,37 @@
 - name: Create a certificate request
   hosts: all
   gather_facts: true
+  vars: 
+    kyndryl_folder: 'C:\Kyndryl\'
 
   tasks:
+    # Check for script folder 
+    - name: Kyndryl folder check
+      win_stat:
+        path: "{{ kyndryl_folder }}"
+      register: folder_check
+
+    # Create script folder if it does not exist
+    - name: Create directory structure if it does not exist
+      win_file:
+        path: "{{ kyndryl_folder }}"
+        state: directory
+      when: folder_check.stat.exists == false
+    
+    # Copy file to a remote location 
+    - name: Copy powershell script to remote host
+      win_copy:
+        src: 'CreateCSR.ps1'
+        dest: "{{ kyndryl_folder }}"
+      delegate_to: localhost
+    
   # run the powershell script to create the request file  
     - name: "Run powershell to create request"
-      win_shell: "{{ lookup('file', './CreateCSR.ps1') }}"  
-      register: csr
-  
+      win_shell: "{{ kyndryl_folder }}CreateCSR.ps1"  
+        
   # Copy file to a remote location 
-    - name: Copy csr file to remote host
-      win_copy:
-        src: 'C:\\Kyndryl\\CSR\\'
-        dest: '\\172.16.23.21\tmp'
-        remote_src: yes
+    - name: Copy request file to common server 
+      fetch:
+        src: {{ kyndryl_folder }}
+        dest: /tmp/requestfile/
+        flat: yes    
