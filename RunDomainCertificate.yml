@@ -1,22 +1,16 @@
 ---
 # ----------------------------------------------------------------#
-#   Run the Certreq  on work group servers
+#   Enable certificates from the Domain
 #
-# 
+  
 # ----------------------------------------------------------------#
 - name: Create a certificate request
   hosts: all
   gather_facts: true
+
 
   tasks:
   # run the powershell script to create the request file  
     - name: "Run powershell to create request"
       win_shell: "{{ lookup('file', './CreateCSR.ps1') }}"  
       register: csr
-  
-  # Copy file to a remote location 
-    - name: Copy csr file to remote host
-      win_copy:
-        src: 'C:\\Kyndryl\\CSR\\'
-        dest: '\\172.16.23.21\tmp'
-        remote_src: yes
