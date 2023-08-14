@@ -8,7 +8,7 @@
     #Get the local values
     $fqdn = [System.Net.Dns]::GetHostByName($env:computerName).HostName
     $IPaddr = (Get-NetIPConfiguration | Where-Object {$_.IPv4DefaultGateway -ne $null -and $_.NetAdapter.status -ne "Disconnected"}).IPv4Address.IPAddress
-    
+    $DisplayNow = Get-Date -format "yyyyMMdd_HHmmss"                                    # Date time format yyymmdd_HHmmss
     
     $INFFolder = "C:\Kyndryl"
     If (-not (Test-Path $INFFolder)) {
@@ -28,10 +28,23 @@
             New-Item -Path $CSRFolder -ItemType Directory
             Write-host "Folder created"
         } Catch{
-            Exit 2
+            Exit 1
         }
     }
-      
+
+    #Build Log file path
+    $LogFile = "C:\Kyndryl\certreq_{2}.log" -f $DisplayNow  
+    # Create the log file
+    #   + Check if file exists
+    if (Test-Path $LogFile) {
+        Write-host "File '$LogFile' already exists!" -f Yellow
+    }
+    else {
+        #Create a new file
+        New-Item -Path $LogFile -ItemType "File"
+        Write-host "New File '$LogFile' Created!" -f Green
+    }
+    
     $CSRPath = "{0}\{1}.csr" -f $CSRFolder,$fqdn 
     $INFPath = "{0}\{1}.inf" -f $INFFolder,$fqdn
 
@@ -52,27 +65,27 @@ _continue_ = "IPAddress=$IPaddr&"
     # Create the certificate request configuration file INF
     Try{
         $INF | out-file -filepath $INFPath -force
-        Write-host "Inf file created: " $INFPath
+        Add-Content -Path $LogFile -Value "Inf file created: " $INFPath
     } Catch{
-        Exit 3
+        Exit 1
     } 
     
     # Check if a certificate request file already exists
     if (Test-Path -Path $CSRPath){
         Remove-Item $CSRPath
-        Write-Host "$CSRPath removed successfully."
+        Add-Content -Path $LogFile -Value "$CSRPath removed successfully."
     }
     else{
-        Write-Host "$CSRPath not found."
+        Add-Content -Path $LogFile -Value "$CSRPath not found."
     }
 
     # Run the CERTREQ command to generate a certificate request     
     Try{
         certreq -new $INFPath $CSRPath
-        Write-host "CRS file created: " $CSRPath
+        Add-Content -Path $LogFile -Value "CRS file created: " $CSRPath
     } Catch{
-        $Error[0].Exception.GetType().FullName | out-file -filepath $CSRPath -force
-        Exit 4
+        $Error[0].Exception.GetType().FullName | out-file -filepath $LogFile -force
+        Exit 1
     } 
     
     # Remove the INF file
