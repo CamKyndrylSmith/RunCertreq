@@ -33,6 +33,6 @@
   # Copy file to a remote location 
     - name: Copy csr file to remote host
       win_copy:
-        src: C:\Kyndryl\CSR\
-        dest: 172.16.23.23\temp
-      #remote_src: yes
+        src: 'C:\Kyndryl\CSR\'
+        dest: '\\172.16.23.23\temp'
+      remote_src: yes
